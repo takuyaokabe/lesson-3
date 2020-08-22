@@ -5,7 +5,9 @@ before_action :check_user, only: [:edit, :update, :destroy]
     @user = User.find(current_user.id)
     @book2 = Book.new
     @book = Book.find(params[:id])
+    @book_comment = BookComment.new
     @user2 =@book.user
+    @comments = @book.book_comments
   end
 
   def index

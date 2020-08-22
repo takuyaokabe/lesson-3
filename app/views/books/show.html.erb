@@ -23,6 +23,57 @@
 					</td>
 					<td><%= link_to @book.title, book_path(@book) %></td>
 					<td><%= @book.body %></td>
+                      <td>
+				      <% if current_user.already_favorited?(@book) %>
+					  <%= link_to book_favorites_path(@book), method: :delete do %>
+					    <i class="fas fa-heart"></i>
+					    <% end %>
+                      <% else %>
+                        <%= link_to book_favorites_path(@book), method: :post do %>
+                          <i class="far fa-heart"></i>
+                        <% end %>
+                      <% end %>
+                      <%= @book.favorites.count %>
+			        </td>
+
+					<td>
+					  <h5>コメント数：<%= @book.book_comments.count %></h5>
+					</td>
+				</tr>
+				<% @comments.each do |comment| %>
+				<tr>
+					<td>
+					<%= attachment_image_tag(comment.user, :profile_image, :fill, 50, 50, fallback: "no-image-mini.jpg") %>
+					</td>
+					<td>
+						<%= comment.comment %>
+					</td>
+					<td>
+					  <% if current_user.id==comment.user_id%>
+					  <td><%= link_to "Destroy", book_book_comment_path(comment.book, comment), method: :delete %></td>
+					  <% end %>
+					</td>
+				</tr>
+				<% end %>
+				<tr>
+					<td>
+					<%= form_for [@book, @book_comment] do |f| %>
+					  <%= f.text_area :comment, rows:'5', class: "form-control",placeholder: "コメントをここに" %>
+					    </div>
+					  </div>
+					  <%= f.submit "送信する", class: "btn btn-lg btn-base-1 mt-20 pull-right" %>
+					<% end %>
+				    </td>
+				</tr>
+
+
+
+
+
+
+
+
+
 					<%if current_user.id==@user2.id%>
 					  <td><%= link_to "Edit", edit_book_path(@book), class: "btn-sm btn-success edit_book_#{@book.id}" %></td>
 					  <td><%= link_to "Destroy", book_path(@book), method: :delete, data: {confirm: "本当に削除してもよろしいですか？"}, class: "btn-sm btn-danger destroy_book_#{@book.id}" %>
