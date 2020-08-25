@@ -11,8 +11,35 @@
 				<th>introduction</th>
 				<th><%= user.introduction %></th>
 			</tr>
+		    <tr>
+				<th>follows</th>
+				<th><%= link_to "#{user.followings.count}", user_follow_path(user) %></th>
+			</tr>
+			<tr>
+				<th>followers</th>
+				<th><%= link_to "#{user.followers.count}", user_follower_path(user)  %></th>
+			</tr>
+			<tr>
+				<td>
+					<% unless current_user == user %>
+					  <% if current_user.following?(user) %>
+					    <%= form_for(current_user.relationships.find_by(follow_id: user.id), html: { method: :delete }) do |f| %>
+					      <%= hidden_field_tag :follow_id, user.id %>
+					      <%= f.submit 'フォロー外す' %>
+					    <% end %>
+					  <% else %>
+					    <%= form_for(current_user.relationships.build) do |f| %>
+					      <%= hidden_field_tag :follow_id, user.id %>
+					      <%= f.submit 'フォローする' %>
+					    <% end %>
+					  <% end %>
+					<% end %>
+				</td>
+			</tr>
 	  </table>
-	
+
 <div class="row">
+	<% if current_user == user %>
 	<%= link_to '', edit_user_path(current_user.id), class: "col-xs-12 btn btn-default glyphicon glyphicon-wrench edit_user_#{user.id}" %>
+	<% end %>
 </div>
